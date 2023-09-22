@@ -254,7 +254,7 @@ void blink() {
 
 void picofi_setup() {
   server.on("/", []() {
-    server.send(200, "text/html", html_headers + "<style>button{margin-bottom:10px;}</style><a href=/picofi><button type=button>picoFi interface</button></a> <br> <a href=/toggle-led><button type=button>Toggle LED</button></a>");
+    server.send(200, "text/html", html_headers + "<style>button{margin-bottom:10px;}</style><a href=/picofi><button type=button>picoFi interface</button></a> <br> <a href=/toggle-led><button type=button>Toggle LED (Currently " + (digitalRead(LED_BUILTIN) ? "on" : "off") + ")</button></a>");
   });
   server.on("/toggle-led", []() {
     digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));    
