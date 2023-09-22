@@ -62,13 +62,15 @@ void setup() {
     delay(1000);
     digitalWrite(LED_BUILTIN, LOW);
     delay(1000);
-    if(!wconnect(wifi.readStringUntil('\n'), wifi.readStringUntil('\n'))) {
+    ssid = wifi.readStringUntil('\n');
+    pass = wifi.readStringUntil('\n');
+    if(!wconnect(ssid, pass)) {
       error();
       digitalWrite(LED_BUILTIN, HIGH);
       delay(2000);
       digitalWrite(LED_BUILTIN, LOW);
       delay(2000);
-      if(!wconnect(wifi.readStringUntil('\n'), wifi.readStringUntil('\n'))) {
+      if(!wconnect(ssid, pass)) {
         picofi_println("Connection failed!");
         while(WiFi.status() != WL_CONNECTED) {
           error();
