@@ -15,7 +15,7 @@ WebServer connectServer(80);
 WebServer server(80);
 bool runServer = false;
 String ssid, pass;
-String html_headers = "<meta name=viewport content=\"width=device-width height=device-height\">";
+String html_headers = "<title>picoFi</title><meta name=viewport content=\"width=device-width height=device-height\">";
 
 void picofi_println(String s) {
   if(ALLOW_PICOFI_SERIAL) {
@@ -59,13 +59,21 @@ void setup() {
   }
   else {
     digitalWrite(LED_BUILTIN, HIGH);
-    delay(2000);
+    delay(1000);
     digitalWrite(LED_BUILTIN, LOW);
+    delay(1000);
     if(!wconnect(wifi.readStringUntil('\n'), wifi.readStringUntil('\n'))) {
-      picofi_println("Connection failed!");
-      while(WiFi.status() != WL_CONNECTED) {
-        error();
-        askForWiFi();
+      error();
+      digitalWrite(LED_BUILTIN, HIGH);
+      delay(2000);
+      digitalWrite(LED_BUILTIN, LOW);
+      delay(2000);
+      if(!wconnect(wifi.readStringUntil('\n'), wifi.readStringUntil('\n'))) {
+        picofi_println("Connection failed!");
+        while(WiFi.status() != WL_CONNECTED) {
+          error();
+          askForWiFi();
+        }
       }
     }
   }
