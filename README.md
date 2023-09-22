@@ -1,5 +1,5 @@
 # picoFi
-A wifi helper for the Raspberry Pi Pico meant to help develop IoT devices *FAST*.
+A wifi helper for the Raspberry Pi Pico W meant to help develop IoT devices *FAST*.
 
 ## What it does
 
