@@ -66,10 +66,11 @@ void setup() {
     pass = wifi.readStringUntil('\n');
     if(!wconnect(ssid, pass)) {
       error();
+      delay(1000);
       digitalWrite(LED_BUILTIN, HIGH);
       delay(2000);
       digitalWrite(LED_BUILTIN, LOW);
-      delay(2000);
+      delay(1000);
       if(!wconnect(ssid, pass)) {
         picofi_println("Connection failed!");
         while(WiFi.status() != WL_CONNECTED) {
@@ -211,6 +212,9 @@ void loop() {
   picofi_loop();
   server.handleClient();
   MDNS.update();
+  if(WiFi.status() != WL_CONNECTED) {
+    runServer = false;
+  }
   long sa = millis();
   if(!runServer) {
     digitalWrite(LED_BUILTIN, LOW);
