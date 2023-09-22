@@ -16,6 +16,7 @@ WebServer server(80);
 bool runServer = false;
 String ssid, pass;
 String html_headers = "<title>picoFi</title><meta name=viewport content=\"width=device-width height=device-height\">";
+String connect_form = "<form action=\"/connect\"><input name=ssid placeholder=SSID><br><input name=pass placeholder=PASSWORD><br><br><button type=submit>Connect</button></form>";
 
 void picofi_println(String s) {
   if(ALLOW_PICOFI_SERIAL) {
@@ -72,8 +73,8 @@ void setup() {
       digitalWrite(LED_BUILTIN, LOW);
       delay(1000);
       if(!wconnect(ssid, pass)) {
-        picofi_println("Connection failed!");
         while(WiFi.status() != WL_CONNECTED) {
+          picofi_println("Connection failed!");
           error();
           askForWiFi();
         }
@@ -108,6 +109,14 @@ void setup() {
   server.begin();
 }
 
+void setupForm() {
+  String form = String(connect_form);
+  if(ssid) {
+    form += "<br><br><a href=/use_normal><button type=button>Use saved details</button></a>";
+  }
+  connectServer.send(200, "text/html", html_headers + form);
+}
+
 void askForWiFi() {
   WiFi.mode(WIFI_AP);
   WiFi.softAPConfig(apIP, apIP, IPAddress(255,255,255,0));
@@ -123,11 +132,11 @@ void askForWiFi() {
   delay(500);
   dnsServer.start(53, "*", apIP);
   runServer = true;
-  connectServer.on("/", []() {
-    connectServer.send(200, "text/html", html_headers + "<form action=\"/connect\"><input name=ssid placeholder=SSID><br><input name=pass placeholder=PASSWORD><br><br><button type=submit>Connect</button></form>");
-  });
-  connectServer.on("/picofi", []() {
-    connectServer.send(200, "text/html", html_headers + "<form action=\"/connect\"><input name=ssid placeholder=SSID><br><input name=pass placeholder=PASSWORD><br><br><button type=submit>Connect</button></form>");
+  connectServer.on("/", setupForm);
+  connectServer.on("/picofi", setupForm);
+  connectServer.on("/use_normal", []() {
+    connectServer.send(200, "text/html", html_headers + "OK! Reloading soon... <script>setTimeout(()=>location.href='http://picofi/picofi',23000)</script>");
+    runServer = false;
   });
   connectServer.on("/connect", []() {
     if(connectServer.hasArg("ssid") && connectServer.hasArg("pass")) {
