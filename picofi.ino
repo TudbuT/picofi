@@ -88,7 +88,7 @@ void setup() {
   });
   server.on("/picofi/connect", []() {
     if(server.hasArg("ssid") && server.hasArg("pass")) {
-      server.send(200, "text/html", html_headers + "OK! Reloading soon... <script>setTimeout(()=>location.href='/',17000)</script>");
+      server.send(200, "text/html", html_headers + "OK! Reloading soon... <script>setTimeout(()=>location.href='/',23000)</script>");
       ssid = server.arg("ssid");
       pass = server.arg("pass");
       runServer = false;
@@ -128,7 +128,7 @@ void askForWiFi() {
   });
   connectServer.on("/connect", []() {
     if(connectServer.hasArg("ssid") && connectServer.hasArg("pass")) {
-      connectServer.send(200, "text/html", html_headers + "OK! Reloading soon... <script>setTimeout(()=>location.href='http://picofi/picofi',17000)</script>");
+      connectServer.send(200, "text/html", html_headers + "OK! Reloading soon... <script>setTimeout(()=>location.href='http://picofi/picofi',23000)</script>");
       ssid = connectServer.arg("ssid");
       pass = connectServer.arg("pass");
       runServer = false;
@@ -192,7 +192,7 @@ bool wconnect(String ssid, String pass) {
     delay(400);
     blink();
     picofi_print(".");
-    if(WiFi.status() == WL_CONNECT_FAILED || millis() - sa > 15000) {
+    if(WiFi.status() == WL_CONNECT_FAILED || millis() - sa > 20000) {
       picofi_println();
       WiFi.end();
       return false;
